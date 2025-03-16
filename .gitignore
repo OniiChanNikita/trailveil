@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.db
+*.sqlite3
+venv/
+
+# React
+/node_modules/
+build/
+
+# IDEs
+.vscode/
+.idea/
+
+# Системные файлы
+.DS_Store
+Thumbs.db
+
+# Другие файлы
+dc.txt
+test.py

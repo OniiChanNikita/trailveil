@@ -1,0 +1,209 @@
+
+services:
+  traefik:
+    image: traefik:v2.5
+    container_name: traefik
+    command:
+      - --api.insecure=true
+      - --providers.docker
+      - --entrypoints.web.address=:80
+      - --entrypoints.ws.address=:8081
+    ports:
+      - "80:80"
+      - "8081:8081"
+      - "8080:8080"  # Traefik dashboard
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.rule=Host(`traefik.localhost`)"
+      - "traefik.http.routers.traefik.service=api@internal"
+      - "traefik.http.routers.traefik.entrypoints=web"
+    networks:
+      - app-network
+
+
+  auth:
+    container_name: auth
+    build:
+      context: ./auth
+    command: >
+      sh -c "python manage.py makemigrations &&
+             python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:password@psg:5432/auth_psg
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.auth.rule=Host(`auth.localhost`) && PathPrefix(`/auth_service`)"
+      - "traefik.http.middlewares.auth-stripprefix.stripprefix.prefixes=/auth_service"
+      - "traefik.http.routers.auth.middlewares=auth-stripprefix"
+      - "traefik.http.services.auth.loadbalancer.server.port=8000"
+      - "traefik.http.routers.auth.entrypoints=web"
+    depends_on:
+      - psg
+    networks:
+      - app-network
+
+  users:
+    container_name: users
+    build:
+      context: ./users
+    command: >
+      sh -c "python manage.py makemigrations &&
+             python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:password@psg:5432/users_psg
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.users.rule=Host(`users.localhost`) && PathPrefix(`/users_service`)"
+      - "traefik.http.middlewares.users-stripprefix.stripprefix.prefixes=/users_service"
+      - "traefik.http.routers.users.middlewares=users-stripprefix"
+      - "traefik.http.services.users.loadbalancer.server.port=8000"
+      - "traefik.http.routers.users.entrypoints=web"
+
+    depends_on:
+      - psg
+    networks:
+      - app-network
+
+  product:
+    container_name: product
+    build:
+      context: ./product
+    command: >
+      sh -c "python manage.py makemigrations &&
+             python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:password@psg:5432/product_psg
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.product.rule=Host(`product.localhost`) && PathPrefix(`/product_sevice`)"
+      - "traefik.http.middlewares.product-stripprefix.stripprefix.prefixes=/product_sevice"
+      - "traefik.http.routers.product.middlewares=product-stripprefix"
+      - "traefik.http.services.product.loadbalancer.server.port=8000"
+      - "traefik.http.routers.product.entrypoints=web"
+    depends_on:
+      - psg
+    networks:
+      - app-network
+
+  review:
+    build:
+      context: ./review
+    container_name: review
+    command: >
+      sh -c "python manage.py makemigrations &&
+             python manage.py migrate &&
+             python review_app/worker.py &&
+             python manage.py runserver 0.0.0.0:8000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:password@psg:5432/review_psg
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.review.rule=Host(`review.localhost`) && PathPrefix(`/review_service`)"
+      - "traefik.http.middlewares.review-stripprefix.stripprefix.prefixes=/review_service"
+      - "traefik.http.routers.review.middlewares=review-stripprefix"
+      - "traefik.http.services.review.loadbalancer.server.port=8000"
+      - "traefik.http.routers.review.entrypoints=web"
+    depends_on:
+      - psg
+      - rabbitmq
+    networks:
+      - app-network
+
+  admin:
+    build: 
+      context: ./admin
+    container_name: admin
+    command: >
+      sh -c "python manage.py makemigrations && 
+             python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:password@psg:5432/admin_psg
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.admin.rule=Host(`admin.localhost`) && PathPrefix(`/admin_service`)"
+      - "traefik.http.middlewares.admin-stripprefix.stripprefix.prefixes=/admin_service"
+      - "traefik.http.routers.admin.middlewares=admin-stripprefix"
+      - "traefik.http.services.admin.loadbalancer.server.port=8000"
+      - "traefik.http.routers.admin.entrypoints=web"
+    depends_on:
+      - psg
+    networks:
+      - app-network
+
+  chat:
+    build:
+      context: ./chat
+    container_name: chat
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - DATABASE_URL=postgresql+asyncpg://postgres:zxsa1234@psg:5432/chat_psg
+    tty: true
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.chat-ws.rule=Host(`localhost`) && PathPrefix(`/ws`)"
+      - "traefik.http.services.chat-ws.loadbalancer.server.port=8000"
+      - "traefik.http.routers.chat-ws.entrypoints=ws"
+    depends_on:
+      - psg
+      - redis
+    networks:
+      - app-network
+
+  chat_http:
+    container_name: chat_http
+    build:
+      context: ./chat
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - DATABASE_URL=postgresql+asyncpg://postgres:zxsa1234@psg:5432/chat_psg
+    tty: true
+    labels:
+      - "traefik.http.routers.chat_http.rule=Host(`chat_http.localhost`) && PathPrefix(`/messages`)"
+      - "traefik.http.services.chat_http.loadbalancer.server.port=8000"
+      - "traefik.http.routers.chat_http.entrypoints=web"
+    depends_on:
+      - psg
+      - redis
+    networks:
+      - app-network
+
+  psg:
+    image: postgres:15
+    container_name: psg
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: zxsa1234
+    networks:
+      - app-network
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    networks:
+      - app-network
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+    restart: always
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

@@ -1,0 +1,6 @@
+CREATE DATABASE users_psg;
+CREATE DATABASE auth_psg;
+CREATE DATABASE review_psg;
+CREATE DATABASE product_psg;
+CREATE DATABASE admin_psg;
+CREATE DATABASE chat_psg;
