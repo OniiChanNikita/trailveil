@@ -28,7 +28,6 @@ const Header = () => {
 
   return (
     <header className="header">
-      <div className = 'headerDiv'>
       <animated.img
         src="/media/gray_big_stone1.png"
         alt="Mountain 1"
@@ -55,7 +54,7 @@ const Header = () => {
         }}
         className="mountain small-stone"
       />
-      </div>
+      <div className="gradient-overlay"></div>
     </header>
   );
 };

@@ -1,8 +1,9 @@
 import React from 'react';
 import Header from '../components/Header';
 import Nav from '../components/Nav';
-import ProductGrid from '../components/ProductGrid';
 import PersonGorp from '../components/PersonGorp';
+import HomeCart from '../components/HomeCart.js';
+
 import './Home.css';
 
 import { useSelector } from "react-redux";
@@ -18,10 +19,9 @@ const Home = () => {
     <div className="App">
       <Nav />
       <Header />
-      <ProductGrid />
+      <HomeCart />
       <PersonGorp />
       <div className = 'opium-gradient-div'>
-        <ProductGrid />
       </div>
       <main>
         <section id="home">

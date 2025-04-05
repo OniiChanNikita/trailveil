@@ -1,8 +1,11 @@
 
+.App{
+  background-color: #0d0d0d;
+
+}
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background-color: #1a1a1a;
   color: #fff;
   overflow-x: hidden;
 }
@@ -25,25 +28,73 @@ section {
   display: flex;
   justify-content: center;
   align-items: center;
-}
-.headerDiv {
-  position: relative;
+  height: 100vh;
   width: 100vw;
-  height: 850px;
+  position: relative;
+
 }
 
+
+/* Основная гора */
 .mountain {
   position: absolute;
-  width: 40%;
+  width: 800px; /* Фиксированная ширина */
+  height: auto; 
   bottom: -35vw;
   right: -10px;
-
+  z-index: 1;
 }
 
+/* Ближняя гора */
 .small-stone {
+  position: absolute;
+  width: 400px; /* Фиксированная ширина */
+  height: auto;
   bottom: -25vw;
-  width: 20%;
+  z-index: 2;
 }
+
+/* Для адаптации на планшетах (ширина экрана < 1024px) */
+@media (max-width: 1224px) {
+  .mountain {
+    width: 600px;
+    bottom: -40vw;
+  }
+
+  .small-stone {
+    width: 300px;
+    bottom: -30vw;
+  }
+}
+
+/* Для адаптации на смартфонах (ширина экрана < 768px) */
+@media (max-width: 768px) {
+  .mountain {
+    width: 500px;
+    bottom: -45vw;
+  }
+
+  .small-stone {
+    width: 250px;
+    bottom: -35vw;
+  }
+}
+
+/* Для адаптации на очень маленьких экранах (ширина экрана < 480px) */
+@media (max-width: 480px) {
+  .mountain {
+    width: 400px;
+    bottom: -50vw;
+  }
+
+  .small-stone {
+    width: 200px;
+    bottom: -40vw;
+  }
+}
+
+
+
 
 
 .bg-home {
@@ -51,7 +102,6 @@ section {
   width:100vw;
   height: 100%;
   top: 0;
-  z-index: -1;
 }
 
 /* Общие стили */
@@ -88,8 +138,7 @@ section {
   color: #aaa;
 }
 
-/* Стили для блока товаров */
-.carousel-container {
+/*.carousel-container {
   padding: 2rem 0 0 ;
   position: relative;
 }
@@ -97,19 +146,19 @@ section {
 .carousel {
   display: flex;
   overflow-x: auto;
-  /*gap: 1rem;*/
-  scrollbar-width: none; /* Скрываем скроллбар для Firefox */
-  -ms-overflow-style: none; /* Скрываем скроллбар для IE */
+  scrollbar-width: none;
+  -ms-overflow-style: none; 
 }
 
 .carousel::-webkit-scrollbar {
-  display: none; /* Скрываем скроллбар для Chrome/Safari */
-}
+  display: none; 
+}*/
 
-.product-card,
+/*.product-card,
 .more-card {
-  flex: 0 0 200px; /* Фиксированная ширина */
+  flex: 0 0 200px; 
   height: 350px;
+  padding: 0.5rem;
   border: 0.5px solid #1a1a1a;
   border-width: 0 0.5px;
   text-align: center;
@@ -131,13 +180,13 @@ section {
   cursor: pointer;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
-
+*/
 /*.more-card:hover {
   background-color: #444;
   color: #ddd;
 }*/
 
-.product-image {
+/*.product-image {
   width: 100%;
   height: 300px;
   object-fit: cover;
@@ -153,7 +202,7 @@ section {
   font-size: 1rem;
   margin: 0;
 
-}
+}*/
 
 .more-text {
   text-align: center;
@@ -238,4 +287,70 @@ section {
   height: 100vh;
   background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 200px, rgba(0, 0, 0, 1) 100%);
 
+}
+
+/* Итоговое объединение в один цвет */
+.gradient-overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  bottom: 0;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 1%, #0d0d0d 100%);
+  z-index: 5;
+}
+
+
+.product-container {
+  position: relative;
+  background: #0d0d0d;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 40px;
+  max-width: 900px;
+}
+
+.product-card {
+  background: transparent;
+  text-align: center;
+  color: white;
+  font-family: "Garamond", serif;
+  font-size: 18px;
+}
+
+.product-card img {
+  width: 100%;
+  max-width: 250px;
+  transition: transform 0.3s ease-in-out;
+}
+
+.product-card:hover img {
+  transform: scale(1.05);
+}
+
+.scroll-circle {
+  position: absolute;
+  bottom: 50px;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 32px;
+  color: white;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.scroll-circle:hover {
+  background: rgba(255, 255, 255, 0.3);
 }
