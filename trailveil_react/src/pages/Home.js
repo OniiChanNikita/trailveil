@@ -3,6 +3,7 @@ import Header from '../components/Header';
 import Nav from '../components/Nav';
 import PersonGorp from '../components/PersonGorp';
 import HomeCart from '../components/HomeCart.js';
+import ProductGrid from '../components/ProductGrid.js';
 
 import './Home.css';
 
@@ -19,6 +20,7 @@ const Home = () => {
     <div className="App">
       <Nav />
       <Header />
+      <ProductGrid />
       <HomeCart />
       <PersonGorp />
       <div className = 'opium-gradient-div'>

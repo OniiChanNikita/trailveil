@@ -1,0 +1,133 @@
+.product-content{
+	padding: 100px 0 100px 0;
+	display: flex;
+	position: relative;
+	flex-direction: row;
+	justify-content: center;
+	width: 100vw;
+	height: 50hw;
+	background-color: #1a1a1a;
+	box-sizing: border-box;
+}
+.product-selection{
+	width: 1000px;
+	height: 100%;
+	padding: 0 10% 0 10%;
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+	gap: 1rem;
+}
+.product-item{
+	position: relative;
+	max-width: 400px;
+	max-height: 350px;
+	border: 1px solid #333;
+	border-radius: .625rem;
+	background-color: #282828; /*222222*/
+	overflow: hidden;
+	box-sizing: border-box;
+
+}
+.product-item:hover {
+  background-color: #262626;
+  transform: translateY(-5px);
+  transition: all 0.3s ease;
+}
+
+.product-item img{
+	width: 100%;
+	margin-top: 0;
+	background: linear-gradient(to bottom, rgba(13, 13, 13, 0) 20%, rgba(13, 13, 13, 0) 30%, #1a1a1a 60%, #1a1a1a 100%);
+}
+
+.product-item > div{
+	position: absolute;
+	bottom: 0;
+	background-color: #1a1a1a;
+	height: 100px;
+	max-height: 100px;
+	width: 100%;
+  	padding: 6%;
+  	box-sizing: border-box;
+}
+
+.product-name {
+	font-family: 'Roboto', sans-serif;
+	font-weight: 500;
+	font-size: 18px;
+	margin-bottom: 8px;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+}
+
+.product-price {
+	font-family: 'Roboto', sans-serif;
+	font-weight: 400;
+	font-size: 16px;
+	color: #f1f1f1;
+	margin-bottom: 10px;
+}
+
+
+.product-gradient-blur{
+	position: absolute;
+	display: flex;
+	justify-content: center;
+	width: 100%;
+	height: 100%;
+	background: linear-gradient(to bottom, rgba(13, 13, 13, 0), #1a1a1a 70%);
+}
+.sign-btn {
+  position: absolute;
+  display: inline-block;
+  padding: 1rem 0 1rem 2rem;
+  background: transparent;
+  color: black;
+  font-size: 1rem;
+  font-weight: bold;
+  border: 3px solid white; /*f3cd00*/
+  cursor: pointer;
+  overflow: hidden;
+  bottom: 35%;
+  z-index: 1;
+  background-color: transparent;
+
+}
+/*
+.sign-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0%;
+  background: #f3cd00;
+  transition: width 0.4s ease;
+  z-index: 0;
+}*/
+
+.reverse-type {
+  mix-blend-mode: hard-light;
+  color: white; /* важно! */
+  font-weight: bold;
+  z-index: 3;
+}
+
+
+.blue-circle {
+  position: absolute;
+  z-index: 3;
+  left: 0;
+  width: 20px;
+  height: 20px;
+  background-color: #0057B7;
+  border-radius: 50%;
+  margin-left: 12px;
+}
+
+.sign-btn:hover {
+	background: transparent;
+}
+.sign-btn:hover::before {
+  width: 100%;
+}
