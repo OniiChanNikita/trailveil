@@ -1,0 +1,106 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+.slider-showing-container{
+	position: relative;	
+	display: flex;
+	box-sizing: border-box;
+	justify-content: space-around;
+	width: 100%;
+	height: 70vh;
+	padding: 100px 0 100px 0;
+}
+
+.slider-showing-text {
+  width: 40%;
+  font-family: 'Roboto', sans-serif;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /*background-color: #1a1a1a;*/
+  color: #cccccc;
+  padding: 60px 40px;
+  max-width: 800px;
+  text-align: center;
+}
+
+.mountain-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  line-height: 1.2;
+}
+
+.mountain-paragraph {
+  font-size: 1.1rem;
+  font-weight: 400;
+  line-height: 1.6;
+  color: #cccccc;
+}
+
+.slider-container {
+  position: relative;
+  width: 40%;
+  height: 100%;
+  cursor: default;
+  user-select: none;
+}
+.slider-container::before{
+	content: "";
+	position: absolute;
+	left: -50px;
+	bottom: -50px;
+	height: 100%;
+	width: 100%;
+
+	background: #708090;
+	z-index: 0;
+}
+
+.background-image,
+.foreground-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.person-image {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  height: 70%;
+  transform: translateX(-50%);
+  z-index: 3;
+  pointer-events: none;
+}
+
+/* Линия */
+.divider-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background-color: white;
+  z-index: 15;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Круглая ручка */
+.slider-handle {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  background-color: white;
+  border-radius: 100%;
+  border: 2px solid black;
+  cursor: grab;
+  z-index: 20;
+}
+
+.slider-handle:active {
+  cursor: grabbing;
+}

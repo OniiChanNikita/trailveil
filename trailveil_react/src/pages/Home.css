@@ -1,11 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 
 .App{
   background-color: #1a1a1a;
-
+  font-family: 'Roboto', sans-serif;
 }
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+a:hover {
+  text-decoration: none;
+  color: inherit;
+}
+
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
+  font-family: 'Roboto', sans-serif;
   color: #fff;
   overflow-x: hidden;
 }
@@ -321,7 +333,7 @@ section {
   background: transparent;
   text-align: center;
   color: white;
-  font-family: "Garamond", serif;
+    font-family: 'Roboto', sans-serif;
   font-size: 18px;
 }
 

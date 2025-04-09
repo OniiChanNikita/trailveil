@@ -1,7 +1,7 @@
 import { useSpring, animated } from '@react-spring/web';
 import { useState } from 'react';
 import { useInView } from 'react-intersection-observer';
-import "./HomeCart.css";
+import "./HomeCart1.css";
 
 const HomeCart = () => {
   const [hovered, setHovered] = useState(null);

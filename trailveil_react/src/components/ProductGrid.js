@@ -43,7 +43,6 @@ const ProductGrid = () => {
           </div>
         </div>
       </div>
-        <div className='product-gradient-blur'>
         <button className="sign-btn">
           <span className="blue-circle" />
           <div style={{display: 'flex', justifyContent: "space-between"}}>
@@ -51,7 +50,6 @@ const ProductGrid = () => {
             <span style = {{fontSize: "10px"}} className="reverse-type">835m</span>
           </div>
         </button>
-        </div>
     </div>
   );
 };

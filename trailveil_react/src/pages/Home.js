@@ -2,8 +2,10 @@ import React from 'react';
 import Header from '../components/Header';
 import Nav from '../components/Nav';
 import PersonGorp from '../components/PersonGorp';
-import HomeCart from '../components/HomeCart.js';
+import HomeCart from '../components/HomeCart1.js';
 import ProductGrid from '../components/ProductGrid.js';
+import ImagesSlider from "../components/ImagesSlider.js"
+import HomeSetCart from "../components/HomeSetCart.js"
 
 import './Home.css';
 
@@ -20,11 +22,13 @@ const Home = () => {
     <div className="App">
       <Nav />
       <Header />
+      <ImagesSlider />
       <ProductGrid />
-      <HomeCart />
-      <PersonGorp />
-      <div className = 'opium-gradient-div'>
-      </div>
+      <HomeSetCart />
+      {/*<HomeCart />*/}
+      {/*<PersonGorp />*/}
+{/*      <div className = 'opium-gradient-div'>
+      </div>*/}
       <main>
         <section id="home">
           <h1>Welcome to Gorpcore</h1>

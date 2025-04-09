@@ -32,8 +32,8 @@ const AuthPage = ({ isLogin }) => {
       const response = await axiosInstance.post(url, formData);
       dispatch(setToken(response.data.access));
       dispatch(setRefreshToken(response.data.refresh));
-
       dispatch(setUser(response.data.username));
+
       navigate('/');
     } catch (err) {
       setError(err.response?.data?.detail || 'Ошибка авторизации');
