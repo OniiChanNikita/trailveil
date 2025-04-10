@@ -19,6 +19,10 @@ class Permission(models.Model):
         return self.code
 
 
+class WishProducts(models.Model):
+    product_id = models.IntegerField(primary_key=True)
+
+
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
         if not email:
@@ -48,6 +52,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)  # Оставляем, но теперь он зависит от роли
     created_at = models.DateTimeField(auto_now_add=True)
+
+    wishlist = models.ManyToManyField(WishProducts, related_name="users_app_wishlist", blank=True)
 
     role = models.ForeignKey(Role, on_delete=models.SET_NULL, null=True, blank=True)
 
