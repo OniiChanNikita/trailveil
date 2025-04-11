@@ -28,7 +28,9 @@ const Nav = () => {
         <li>Home</li>
 {/*        <li>About</li>
         <li>Contact</li>*/}
-        <li>Products</li>
+        <li><Link to='/products'>
+            Products
+          </Link></li>
         {user && ( 
         <li>
           <Link to={user ? '/logout' : '/login'}>

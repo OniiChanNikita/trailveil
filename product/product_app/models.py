@@ -21,11 +21,17 @@ class Category(models.Model):
 class Product(models.Model):
 	title = models.CharField(max_length = 255)
 	size = ArrayField(
-	models.CharField(max_length=25), null=True)
+		models.CharField(max_length=25),
+	)
 	description = models.TextField()
 	availability = models.BooleanField(default=False)
 	rating = models.FloatField(default=0)
-	category = models.OneToOneField(Category, on_delete = models.CASCADE, null=True)
+	category = ArrayField(
+		models.CharField(max_length=255),
+		blank=True,
+		default=list
+	)
+	price = models.FloatField(default=100, null=True)
 
 	slug = models.SlugField(default = generate_random_digits(5), max_length=255, unique=True, primary_key=True, blank=True)
 

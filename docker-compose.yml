@@ -80,8 +80,8 @@ services:
       - DATABASE_URL=postgresql://postgres:password@psg:5432/product_psg
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.product.rule=Host(`product.localhost`) && PathPrefix(`/product_sevice`)"
-      - "traefik.http.middlewares.product-stripprefix.stripprefix.prefixes=/product_sevice"
+      - "traefik.http.routers.product.rule=Host(`product.localhost`) && PathPrefix(`/product_service`)"
+      - "traefik.http.middlewares.product-stripprefix.stripprefix.prefixes=/product_service"
       - "traefik.http.routers.product.middlewares=product-stripprefix"
       - "traefik.http.services.product.loadbalancer.server.port=8000"
       - "traefik.http.routers.product.entrypoints=web"
