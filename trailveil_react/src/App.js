@@ -1,8 +1,6 @@
-
-
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Header from "./components/Header";
+import Nav from "./components/Nav";
 import Home from "./pages/Home";
 import Shop from "./pages/Shop";
 import About from "./pages/About";
@@ -11,13 +9,15 @@ import NotFound from "./pages/NotFound";
 import AuthPage from "./pages/AuthPage";
 import Logout from "./pages/Logout";
 import Profile from "./pages/Profile";
-import Products from './pages/Products';
+import ProductsPage from './pages/ProductsPage';
 import AdminPage from './pages/AdminPage';
 import ChatPage from './pages/ChatPage';
-/*import withAdminProtection from './withAdminProtection.js';
-*//*import Orders from './pages/Orders';*/
 
-/*const ProtectedAdminPage = withAdminProtection(AdminPage)*/
+// Admin components
+import Dashboard from "./components/adminComponents/Dashboard";
+import Users from "./components/adminComponents/Users";
+import Products from "./components/adminComponents/Products";
+import AdminChat from "./components/adminComponents/AdminChat";
 
 const App = () => {
   return (
@@ -30,18 +30,20 @@ const App = () => {
         <Route path="/login" element={<AuthPage isLogin={true}/>} />
         <Route path="/register" element={<AuthPage isLogin={false}/>} />
         <Route path="/logout" element={<Logout/>} />
-
-        <Route path="/products" element={<Products />} />
+        <Route path="/products" element={<ProductsPage />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/chat" element={<ChatPage />} />
 
-        {/*<Route path="/orders" element={<Orders />} />*/}
+        {/* Админ-маршруты */}
+        <Route path="/admin/*" element={<AdminPage />}>
+          <Route index element={<Dashboard />} />
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="users" element={<Users />} />
+          <Route path="products" element={<Products />} />
+          <Route path="chat" element={<AdminChat />} />
+        </Route>
 
-        <Route path="/admin/*" element={<AdminPage />} /> /*ProtectedAdminPage*/
-
-
-
-        <Route path="*" element={<NotFound />} /> {/* Страница 404 */}
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
   );

@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
-from users_app.views import RegisterUserView, GetUserView, GetUsersView, ValidateLoginView
+from users_app.views import RegisterUserView, GetUserView, GetUsersView, ValidateLoginView, StaffUsersView, StaffMeView
 from django.conf import settings
 
 urlpatterns = [
@@ -25,4 +25,7 @@ urlpatterns = [
     path('users/', GetUsersView.as_view(), name='user-list'),  # Получить список пользователей
     path('users/<str:username>/', GetUserView.as_view(), name='user-detail'),  # Получить пользователя по ID
     path('user/validate/', ValidateLoginView.as_view(), name='user-validate'),  # Получить пользователя по ID
+
+    path('api/staff/me', StaffMeView.as_view(), name='staff-me'),
+    path('api/staff/users', StaffUsersView.as_view(), name='staff-users')
 ]

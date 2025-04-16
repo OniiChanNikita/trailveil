@@ -31,7 +31,6 @@ app.add_middleware(
     allow_credentials=True,  # Разрешить куки и авторизацию
     allow_methods=["*"],  # Разрешенные методы (GET, POST, WS и т.д.)
     allow_headers=["*"],  # Разрешенные заголовки (Authorization, WebSocket и т.д.)
-
 )
 
 redis_client = redis.Redis(host=os.getenv("REDIS_HOST", "localhost"), port=int(os.getenv("REDIS_PORT", 6379)), decode_responses=True)

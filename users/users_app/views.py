@@ -23,7 +23,7 @@ from rest_framework import status
 from rest_framework.permissions import AllowAny
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import check_password
-from .serializers import RegisterSerializer, PermissionSerializer, UserSerializer
+from .serializers import RegisterSerializer, RoleSerializer, PermissionSerializer, UserSerializer, StaffMeSerializer, StaffUsersSerializer
 from django.shortcuts import get_object_or_404
 from .models import Permission, Role
 
@@ -80,3 +80,23 @@ class ValidateLoginView(APIView):
             pass
 
         return Response({"error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
+
+
+class StaffMeView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        print(request.user)
+        user = User.objects.get(username=request.data.get("username"))
+        return Response(StaffMeSerializer(user, many=False).data)
+
+class StaffUsersView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        print(request.data)
+        if request.data.get("userId")!=None:
+            user = User.objects.filter(username=request.data.get("userId"))
+        else:
+            user = User.objects.all()
+        return Response(StaffUsersSerializer(user, many=True).data)
