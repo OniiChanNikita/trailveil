@@ -17,7 +17,7 @@ import ChatPage from './pages/ChatPage';
 import Dashboard from "./components/adminComponents/Dashboard";
 import Users from "./components/adminComponents/Users";
 import Products from "./components/adminComponents/Products";
-import AdminChat from "./components/adminComponents/AdminChat";
+import ChatLayout from "./components/adminComponents/chat/ChatLayout";
 
 const App = () => {
   return (
@@ -40,7 +40,7 @@ const App = () => {
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="users" element={<Users />} />
           <Route path="products" element={<Products />} />
-          <Route path="chat" element={<AdminChat />} />
+          <Route path="chat" element={<ChatLayout />} />
         </Route>
 
         <Route path="*" element={<NotFound />} />

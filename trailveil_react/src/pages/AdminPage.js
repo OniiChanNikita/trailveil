@@ -1,10 +1,38 @@
-import { useState } from "react";
-import { Outlet, Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Outlet, Link, useNavigate } from "react-router-dom";
 import { useTheme } from "../providers/ThemeProvider";
+import { checkUserRole } from "../services/authService";
 
 const AdminPage = () => {
   const { theme, toggleTheme } = useTheme();
   const [activeTab, setActiveTab] = useState("dashboard");
+  const [isAuthorized, setIsAuthorized] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
+
+  // Проверка роли при монтировании
+  useEffect(() => {
+    const verifyAccess = async () => {
+      try {
+        const role = await checkUserRole();
+        const allowedRoles = ['admin', 'superadmin', 'moderator', 'support'];
+        
+        if (!role) {
+          navigate("/");
+          return;
+        }
+        
+        setIsAuthorized(true);
+      } catch (error) {
+        console.error('Access verification failed:', error);
+        navigate("/");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    verifyAccess();
+  }, [navigate]);
 
   // Список вкладок
   const tabs = [
@@ -14,6 +42,18 @@ const AdminPage = () => {
     { id: "orders", name: "Заказы", icon: "📦" },
     { id: "chat", name: "Чат", icon: "💬" },
   ];
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-xl">Проверка доступа...</div>
+      </div>
+    );
+  }
+
+  if (!isAuthorized) {
+    return null; // Редирект уже произошел
+  }
 
   return (
     <div className={`min-h-screen flex ${theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-900'}`}>

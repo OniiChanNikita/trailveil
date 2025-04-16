@@ -49,7 +49,7 @@ const Users = () => {
             <tr key={user.id} className="border-t">
               <td className="p-3">{user.id}</td>
               <td>{user.email}</td>
-              <td>{user.role.name}</td>
+              <td>{user.role?.name}</td>
               <td>
                 <button 
                   onClick={() => setSelectedUser(user)}
