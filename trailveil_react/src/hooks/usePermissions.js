@@ -28,7 +28,7 @@ export const usePermissions = () => {
     isModerator,
     hasAccess: (requiredRole) => {
       if (isLoading) return false;
-      if (requiredRole === 'admin') return isAdmin();
+      if (requiredRole === 'admin')  return isAdmin;
       if (requiredRole === 'support') return isSupport();
       return false;
     }
