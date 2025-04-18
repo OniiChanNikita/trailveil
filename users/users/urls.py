@@ -23,7 +23,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('user/register/', RegisterUserView.as_view(), name='user-register'),  # Получить список пользователей
     path('users/', GetUsersView.as_view(), name='user-list'),  # Получить список пользователей
-    path('users/<str:username>/', GetUserView.as_view(), name='user-detail'),  # Получить пользователя по ID
+    path('me/', GetUserView.as_view(), name='user-detail'),  # Получить пользователя по ID
     path('user/validate/', ValidateLoginView.as_view(), name='user-validate'),  # Получить пользователя по ID
 
     path('api/staff/me', StaffMeView.as_view(), name='staff-me'),

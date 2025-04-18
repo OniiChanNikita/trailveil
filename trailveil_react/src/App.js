@@ -19,6 +19,10 @@ import Users from "./components/adminComponents/Users";
 import Products from "./components/adminComponents/Products";
 import ChatLayout from "./components/adminComponents/chat/ChatLayout";
 
+import ProtectedRoute from './routes/ProtectedRoute'
+
+
+
 const App = () => {
   return (
     <Router>
@@ -31,11 +35,11 @@ const App = () => {
         <Route path="/register" element={<AuthPage isLogin={false}/>} />
         <Route path="/logout" element={<Logout/>} />
         <Route path="/products" element={<ProductsPage />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/chat" element={<ChatPage />} />
+        <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+        <Route path="/chat" element={<ProtectedRoute><ChatPage /></ProtectedRoute>} />
 
         {/* Админ-маршруты */}
-        <Route path="/admin/*" element={<AdminPage />}>
+        <Route path="/admin/*" element={<ProtectedRoute><AdminPage /></ProtectedRoute>}>
           <Route index element={<Dashboard />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="users" element={<Users />} />

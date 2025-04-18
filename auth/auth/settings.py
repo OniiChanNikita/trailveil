@@ -74,16 +74,22 @@ TEMPLATES = [
     },
 ]
 
-CORS_ALLOW_ALL_ORIGINS = True  # ❗ Убрать в продакшене!
-#CORS_ALLOW_CREDENTIALS = True  # Если используются cookies/token
-CORS_ALLOW_METHODS = ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
-CORS_ALLOW_HEADERS = ["*"]
+from corsheaders.defaults import default_headers
 
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:80",  # Gateway адрес
     "http://localhost:3000",
 ]
+
+
+CORS_ALLOW_ALL_ORIGINS = True  # ❗ Убрать в продакшене!
+CORS_ALLOW_CREDENTIALS = True  # Если используются cookies/token
+CORS_ALLOW_METHODS = ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    'authorization',
+]
+
 
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:80",  # Gateway адрес
@@ -173,11 +179,16 @@ from datetime import timedelta
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=30),
     'USER_ID_FIELD': 'id',
     'USER_ID_CLAIM': 'username',
-    'ROTATE_REFRESH_TOKENS': False,
+    'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    'AUTH_COOKIE': 'access_token',  # Опционально: cookie для access token
+    'AUTH_COOKIE_HTTP_ONLY': True,  # Чтобы JS мог читать access token
+    'AUTH_COOKIE_SECURE': True,      # Только HTTPS
+    'AUTH_COOKIE_SAMESITE': 'None',   # Защита от CSRF
     'ALGORITHM': 'HS256',
     'SIGNING_KEY': SECRET_KEY,
 }

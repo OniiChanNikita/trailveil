@@ -5,6 +5,8 @@ import RecentlyViewProduct from "../components/ProfileComponents/RecentlyViewPro
 import { Navigate } from "react-router-dom";
 import { useNavigate, Outlet } from 'react-router-dom';
 import axios from 'axios';
+import api from "../lib/axiosMiddleware"
+
 
 
 const Profile = () => {
@@ -21,7 +23,7 @@ const Profile = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get(`http://users.localhost/users_service/users/${localStorage.getItem("username")}/`);
+        const response = await api.get(`http://users.localhost/users_service/me`);
 
         if (!response.data.is_staff) {
           navigate('/')

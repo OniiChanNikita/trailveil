@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { FaRobot, FaHeadset, FaLightbulb, FaBars, FaTimes } from "react-icons/fa";
-import axiosInstance from '../axiosInstance';
+import api from "../lib/axiosMiddleware"
+
 import "./ChatPage.css";
 
 
@@ -16,8 +17,8 @@ const ChatPage = () => {
 
   useEffect(async () => {
     try{
-      const response_chat = await axiosInstance.get(`http://chat_http.localhost:80/messages/users/${localStorage.getItem('username')}/${activeChat}/`)
-      const response_messages = await axiosInstance.get(`http://chat_http.localhost:80/messages/chat/${response_chat.data.id}/`)
+      const response_chat = await api.get(`http://chat_http.localhost:80/messages/users/${localStorage.getItem('username')}/${activeChat}/`)
+      const response_messages = await api.get(`http://chat_http.localhost:80/messages/chat/${response_chat.data.id}/`)
       setMessages(response_messages.data)
     } catch(err) {
       console.log(err)

@@ -96,10 +96,14 @@ DATABASES = {
 
 AUTH_USER_MODEL = "users_app.User"
 
+from corsheaders.defaults import default_headers
+
 #CORS_ALLOW_ALL_ORIGINS = True  # ❗ Убрать в продакшене!
-#CORS_ALLOW_CREDENTIALS = True  # Если используются cookies/token
+CORS_ALLOW_CREDENTIALS = True  # Если используются cookies/token
 CORS_ALLOW_METHODS = ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
-CORS_ALLOW_HEADERS = ["*"]
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    'authorization',
+]
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:80",  # Gateway адрес
@@ -113,7 +117,7 @@ CSRF_TRUSTED_ORIGINS = [
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'users_app.authentication.BearerTokenAuth',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',

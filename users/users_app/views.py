@@ -21,6 +21,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import AllowAny
+from users_app.authentication import BearerTokenAuth 
+
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import check_password
 from .serializers import RegisterSerializer, RoleSerializer, PermissionSerializer, UserSerializer, StaffMeSerializer, StaffUsersSerializer
@@ -42,9 +44,11 @@ class RegisterUserView(APIView):
 
 class GetUserView(APIView):
     permission_classes = [AllowAny]
-    authentication_classes = []
+    authentication_classes = [BearerTokenAuth]
 
-    def get(self, request, username):
+    def get(self, request):
+        username = request.user.username
+
         user = get_object_or_404(User, username=username)
 
         permissions = Permission.objects.filter(roles=user.role)
@@ -59,6 +63,8 @@ class GetUserView(APIView):
 
 class GetUsersView(APIView):
     permission_classes = [AllowAny]
+    authentication_classes = []
+
     def get(self, request):
         users = User.objects.all()
         return Response(UserSerializer(users, many=True).data)

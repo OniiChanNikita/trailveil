@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Outlet, Link, useNavigate } from "react-router-dom";
 import { useTheme } from "../providers/ThemeProvider";
 import { checkUserRole } from "../services/authService";
+import api from "../lib/axiosMiddleware"
 
 const AdminPage = () => {
   const { theme, toggleTheme } = useTheme();

@@ -4,8 +4,8 @@ import { setToken } from '../slices/authSlice';
 import { setUser } from '../slices/authSlice';
 import { setRefreshToken } from '../slices/authSlice';
 import { useNavigate } from 'react-router-dom';
-import axiosInstance from '../axiosInstance';
 import './Auth.css';
+import axios from 'axios'
 
 const AuthPage = ({ isLogin }) => {
   const [formData, setFormData] = useState({
@@ -29,9 +29,12 @@ const AuthPage = ({ isLogin }) => {
       : 'http://auth.localhost/auth_service/register/';
 
     try {
-      const response = await axiosInstance.post(url, formData);
+      const response = await axios.post(url, formData, {
+        withCredentials: true // ✅ Обязательно для отправки и получения куки
+      });
+      console.log(response)
       dispatch(setToken(response.data.access));
-      dispatch(setRefreshToken(response.data.refresh));
+      /*dispatch(setRefreshToken(response.data.refresh));*/
       dispatch(setUser(response.data.username));
 
       navigate('/');
