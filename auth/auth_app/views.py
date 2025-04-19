@@ -107,28 +107,37 @@ class RegisterView(APIView):
     authentication_classes = []
 
     def post(self, request):
-        # Отправляем запрос в сервис users для создания пользователя
         users_service_url = "http://users:8000/user/register/"
-        print(users_service_url)
-        response = requests.post(users_service_url, data=json.dumps(request.data), headers={"Content-Type": "application/json"})
-        print(response)
+        response = requests.post(users_service_url, json=request.data)
 
         if response.status_code == 201:
             user_data = response.json()
             user_id = user_data["id"]
             username = user_data['username']
 
-            # Создаём JWT-токен для нового пользователя
+            # Создаём JWT-токен
             refresh = RefreshToken()
             refresh['username'] = username
+            access_token = str(refresh.access_token)
+            refresh_token = str(refresh)
 
-            return Response({
-                "refresh": str(refresh),
-                "access": str(refresh.access_token),
-                'username': str(username)
+            response = Response({
+                "access": access_token,
+                "username": username
             }, status=status.HTTP_201_CREATED)
 
+            response.set_cookie(
+                key='refresh_token',
+                value=refresh_token,
+                httponly=True,
+                secure=False,  # установить True при использовании HTTPS
+                samesite='Lax',
+                max_age=60 * 60 * 24 * 30,  # 30 дней
+            )
+            return response
+
         return Response(response.json(), status=response.status_code)
+
 
 class VerifyTokenView(APIView):
     permission_classes = [AllowAny]

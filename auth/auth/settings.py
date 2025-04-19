@@ -78,8 +78,8 @@ from corsheaders.defaults import default_headers
 
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:80",  # Gateway адрес
-    "http://localhost:3000",
+    "http://frontend.localhost:80",  # Gateway адрес
+    "http://frontend.localhost:3000",
 ]
 
 
@@ -92,8 +92,8 @@ CORS_ALLOW_HEADERS = list(default_headers) + [
 
 
 CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:80",  # Gateway адрес
-    "http://localhost:3000",
+    "http://frontend.localhost:80",  # Gateway адрес
+    "http://frontend.localhost:3000",
 ]
 
 REST_FRAMEWORK = {
@@ -188,7 +188,7 @@ SIMPLE_JWT = {
     'AUTH_COOKIE': 'access_token',  # Опционально: cookie для access token
     'AUTH_COOKIE_HTTP_ONLY': True,  # Чтобы JS мог читать access token
     'AUTH_COOKIE_SECURE': False,      # Только HTTPS
-    # 'AUTH_COOKIE_SAMESITE': 'None',   # Защита от CSRF
+    # 'AUTH_COOKIE_SAMESITE': 'Lax',   # Защита от CSRF
     'ALGORITHM': 'HS256',
     'SIGNING_KEY': SECRET_KEY,
 }

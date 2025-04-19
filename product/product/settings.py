@@ -98,13 +98,13 @@ CORS_ALLOW_METHODS = ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
 CORS_ALLOW_HEADERS = ["*"]
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:80",  # Gateway адрес
-    "http://localhost:3000",
+    "http://frontend.localhost:80",  # Gateway адрес
+    "http://frontend.localhost:3000",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:80",  # Gateway адрес
-    "http://localhost:3000",
+    "http://frontend.localhost:80",  # Gateway адрес
+    "http://frontend.localhost:3000",
 ]
 
 

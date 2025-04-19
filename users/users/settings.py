@@ -98,6 +98,11 @@ AUTH_USER_MODEL = "users_app.User"
 
 from corsheaders.defaults import default_headers
 
+CORS_ALLOWED_ORIGINS = [
+    "http://frontend.localhost:80",  # Gateway адрес
+    "http://frontend.localhost:3000",
+]
+
 #CORS_ALLOW_ALL_ORIGINS = True  # ❗ Убрать в продакшене!
 CORS_ALLOW_CREDENTIALS = True  # Если используются cookies/token
 CORS_ALLOW_METHODS = ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
@@ -105,14 +110,11 @@ CORS_ALLOW_HEADERS = list(default_headers) + [
     'authorization',
 ]
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:80",  # Gateway адрес
-    "http://localhost:3000",
-]
+
 
 CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:80",  # Gateway адрес
-    "http://localhost:3000",
+    "http://frontend.localhost:80",  # Gateway адрес
+    "http://frontend.localhost:3000",
 ]
 
 REST_FRAMEWORK = {
