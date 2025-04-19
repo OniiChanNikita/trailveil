@@ -34,7 +34,6 @@ const AuthPage = ({ isLogin }) => {
       });
       console.log(response)
       dispatch(setToken(response.data.access));
-      /*dispatch(setRefreshToken(response.data.refresh));*/
       dispatch(setUser(response.data.username));
 
       navigate('/');

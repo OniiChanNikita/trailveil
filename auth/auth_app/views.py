@@ -10,6 +10,8 @@ from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
 from rest_framework_simplejwt.views import TokenRefreshView
 
 class CookieTokenRefreshView(TokenRefreshView):
+    permission_classes = [AllowAny]
+
     def post(self, request, *args, **kwargs):
         print("COOKIES:", request.COOKIES)
         refresh_token = request.COOKIES.get('refresh_token')
@@ -52,8 +54,8 @@ class LoginView(APIView):
                 key='refresh_token',
                 value=refresh_token,
                 httponly=True,
-                secure=True,  # Только для HTTPS
-                samesite='None',
+                secure=False,  # Только для HTTPS
+                samesite='Lax',
                 max_age=60 * 60 * 24 * 30,  # 30 дней
                 # path='/api/auth/refresh/'  # Доступно только для эндпоинта refresh
             )

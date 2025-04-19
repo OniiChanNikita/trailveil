@@ -82,6 +82,8 @@ async def websocket_endpoint(
         await websocket.close(code=4001)
         return
 
+    listener_task = None
+
     try:
         user_data = await verify_token(token)
         if not user_data:
@@ -169,7 +171,8 @@ async def websocket_endpoint(
     finally:
         print("Closing connection...")
         active = False
-        listener_task.cancel()
+        if listener_task:
+            listener_task.cancel()
         try:
             await pubsub.unsubscribe(f"chat:{chat.id}:{sender}")
             await pubsub.close()

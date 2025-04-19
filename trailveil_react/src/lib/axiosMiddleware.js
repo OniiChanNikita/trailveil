@@ -2,9 +2,10 @@ import axios from 'axios';
 import store from '../store';
 import { setToken, logout } from '../slices/authSlice';
 
+
+
 // Создаём экземпляр axios с базовыми настройками
 const api = axios.create({
-  baseURL: 'http://auth.localhost/auth_service/',
   withCredentials: true, // Важно для работы с HTTP-only cookies
 });
 
@@ -40,9 +41,6 @@ api.interceptors.response.use(
           {}, // Пустое тело, так как refresh token в cookies
           { 
             withCredentials: true,
-            headers: {
-              'Content-Type': 'application/json',
-            }
           } // Отправляем cookies
         );
         console.log(response)
