@@ -6,7 +6,7 @@ import { RiLoader2Line } from 'react-icons/ri';
 import ProductCard from '../components/productComponents/ProductCard'
 import axios from "axios";
 
-const Products = () => {
+const ProductsPage = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [products, setProducts] = useState([]);
@@ -22,7 +22,7 @@ const Products = () => {
   const fetchProducts = async (params = {}) => {
     setIsLoading(true);
     try {
-      const response = await axios.get('http://product.localhost/product_service/products', { params });
+      const response = await axios.get('http://localhost/api_product/products', { params });
       return response.data;
       
       // Имитация задержки сети
@@ -375,4 +375,4 @@ const FilterSidebarContent = ({ filters, setFilters, toggleCategory }) => {
 
 // Product Card Component остается без изменений
 
-export default Products;
+export default ProductsPage;

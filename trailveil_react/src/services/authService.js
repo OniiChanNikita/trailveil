@@ -1,6 +1,6 @@
 export const checkUserRole = async () => {
   try {
-    const response = await fetch(`http://users.localhost/users_service/users/${localStorage.getItem("username")}`, {
+    const response = await fetch(`http://localhost/api_users/users/${localStorage.getItem("username")}`, {
 /*      headers: {
         'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
       }*/

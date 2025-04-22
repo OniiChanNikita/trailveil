@@ -23,12 +23,12 @@ const Profile = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await api.get(`http://users.localhost/users_service/me`);
+        const response = await api.get(`http://localhost/api_users/me`);
 
-        if (!response.data.is_staff) {
+/*        if (!response.data.is_staff) {
           navigate('/')
           return;
-        }
+        }*/
 
         console.log(response.data)
 

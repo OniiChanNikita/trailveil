@@ -10,7 +10,7 @@ const Logout = () => {
 	useEffect(() => {
 		const fetchUserData = async () => {
       		try {
-    			await axios.get(`http://auth.localhost/auth_service/logout`);
+    			await axios.get(`http://localhost/api_auth/logout`);
 
 	      	} catch (error) {
 		        console.error('Ошибка при logout данных пользователя:', error);

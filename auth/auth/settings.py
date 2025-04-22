@@ -80,7 +80,7 @@ from corsheaders.defaults import default_headers
 CORS_ALLOWED_ORIGINS = [
     "http://frontend.localhost",
     "http://frontend.localhost:80",  # Gateway адрес
-    "http://frontend.localhost:3000",
+    "http://localhost:3000",
 ]
 
 
@@ -95,7 +95,7 @@ CORS_ALLOW_HEADERS = list(default_headers) + [
 CSRF_TRUSTED_ORIGINS = [
     "http://frontend.localhost",
     "http://frontend.localhost:80",  # Gateway адрес
-    "http://frontend.localhost:3000",
+    "http://localhost:3000",
 ]
 
 REST_FRAMEWORK = {
@@ -113,7 +113,7 @@ REST_FRAMEWORK = {
 
 WSGI_APPLICATION = 'auth.wsgi.application'
 
-FORCE_SCRIPT_NAME = "/auth_service" 
+FORCE_SCRIPT_NAME = "/api_auth" 
 USE_X_FORWARDED_HOST = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 

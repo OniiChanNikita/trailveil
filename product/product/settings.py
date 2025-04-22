@@ -72,7 +72,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'product.wsgi.application'
-FORCE_SCRIPT_NAME = "/product_service" 
+FORCE_SCRIPT_NAME = "/api_product" 
 USE_X_FORWARDED_HOST = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
@@ -99,12 +99,12 @@ CORS_ALLOW_HEADERS = ["*"]
 
 CORS_ALLOWED_ORIGINS = [
     "http://frontend.localhost:80",  # Gateway адрес
-    "http://frontend.localhost:3000",
+    "http://localhost:3000",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     "http://frontend.localhost:80",  # Gateway адрес
-    "http://frontend.localhost:3000",
+    "http://localhost:3000",
 ]
 
 

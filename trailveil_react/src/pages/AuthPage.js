@@ -25,8 +25,8 @@ const AuthPage = ({ isLogin }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const url = isLogin
-      ? 'http://auth.localhost/auth_service/login/'
-      : 'http://auth.localhost/auth_service/register/';
+      ? 'http://localhost/api_auth/login/'
+      : 'http://localhost/api_auth/register/';
 
     try {
       const response = await axios.post(url, formData, {

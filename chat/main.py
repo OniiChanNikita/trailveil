@@ -22,8 +22,8 @@ import os
 app = FastAPI()
 
 origins = [
-    "http://frontend.localhost:3000",  # Если фронтенд на React
-    "http://frontend.localhost:8000",  # Если ты тестируешь API локально
+    "http://localhost:3000",  # Если фронтенд на React
+    "http://localhost:80",  # Если ты тестируешь API локально
 ]
 
 app.add_middleware(

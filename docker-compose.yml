@@ -16,7 +16,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.traefik.rule=Host(`traefik.localhost`)"
+      - "traefik.http.routers.traefik.rule=Host(`localhost`) && PathPrefix(`/traefik`)"
       - "traefik.http.routers.traefik.service=api@internal"
       - "traefik.http.routers.traefik.entrypoints=web"
     networks:
@@ -28,7 +28,7 @@ services:
       context: ./trailveil_react
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.frontend.rule=Host(`frontend.localhost`)"
+      - "traefik.http.routers.frontend.rule=Host(`localhost`)"
       - "traefik.http.services.frontend.loadbalancer.server.port=80"
       - "traefik.http.routers.frontend.entrypoints=web"
     networks:
@@ -48,8 +48,8 @@ services:
       - DATABASE_URL=postgresql://postgres:password@psg:5432/auth_psg
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.auth.rule=Host(`auth.localhost`) && PathPrefix(`/auth_service`)"
-      - "traefik.http.middlewares.auth-stripprefix.stripprefix.prefixes=/auth_service"
+      - "traefik.http.routers.auth.rule=Host(`localhost`) && PathPrefix(`/api_auth`)"
+      - "traefik.http.middlewares.auth-stripprefix.stripprefix.prefixes=/api_auth"
       - "traefik.http.routers.auth.middlewares=auth-stripprefix"
       - "traefik.http.services.auth.loadbalancer.server.port=8000"
       - "traefik.http.routers.auth.entrypoints=web"
@@ -70,8 +70,8 @@ services:
       - DATABASE_URL=postgresql://postgres:password@psg:5432/users_psg
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.users.rule=Host(`users.localhost`) && PathPrefix(`/users_service`)"
-      - "traefik.http.middlewares.users-stripprefix.stripprefix.prefixes=/users_service"
+      - "traefik.http.routers.users.rule=Host(`localhost`) && PathPrefix(`/api_users`)"
+      - "traefik.http.middlewares.users-stripprefix.stripprefix.prefixes=/api_users"
       - "traefik.http.routers.users.middlewares=users-stripprefix"
       - "traefik.http.services.users.loadbalancer.server.port=8000"
       - "traefik.http.routers.users.entrypoints=web"
@@ -93,8 +93,8 @@ services:
       - DATABASE_URL=postgresql://postgres:password@psg:5432/product_psg
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.product.rule=Host(`product.localhost`) && PathPrefix(`/product_service`)"
-      - "traefik.http.middlewares.product-stripprefix.stripprefix.prefixes=/product_service"
+      - "traefik.http.routers.product.rule=Host(`localhost`) && PathPrefix(`/api_product`)"
+      - "traefik.http.middlewares.product-stripprefix.stripprefix.prefixes=/api_product"
       - "traefik.http.routers.product.middlewares=product-stripprefix"
       - "traefik.http.services.product.loadbalancer.server.port=8000"
       - "traefik.http.routers.product.entrypoints=web"
@@ -116,8 +116,8 @@ services:
       - DATABASE_URL=postgresql://postgres:password@psg:5432/review_psg
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.review.rule=Host(`review.localhost`) && PathPrefix(`/review_service`)"
-      - "traefik.http.middlewares.review-stripprefix.stripprefix.prefixes=/review_service"
+      - "traefik.http.routers.review.rule=Host(`localhost`) && PathPrefix(`/api_review`)"
+      - "traefik.http.middlewares.review-stripprefix.stripprefix.prefixes=/api_review"
       - "traefik.http.routers.review.middlewares=review-stripprefix"
       - "traefik.http.services.review.loadbalancer.server.port=8000"
       - "traefik.http.routers.review.entrypoints=web"
@@ -127,27 +127,27 @@ services:
     networks:
       - app-network
 
-  admin:
-    build: 
-      context: ./admin
-    container_name: admin
-    command: >
-      sh -c "python manage.py makemigrations && 
-             python manage.py migrate &&
-             python manage.py runserver 0.0.0.0:8000"
-    environment:
-      - DATABASE_URL=postgresql://postgres:password@psg:5432/admin_psg
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.admin.rule=Host(`admin.localhost`) && PathPrefix(`/admin_service`)"
-      - "traefik.http.middlewares.admin-stripprefix.stripprefix.prefixes=/admin_service"
-      - "traefik.http.routers.admin.middlewares=admin-stripprefix"
-      - "traefik.http.services.admin.loadbalancer.server.port=8000"
-      - "traefik.http.routers.admin.entrypoints=web"
-    depends_on:
-      - psg
-    networks:
-      - app-network
+  # admin:
+  #   build: 
+  #     context: ./admin
+  #   container_name: admin
+  #   command: >
+  #     sh -c "python manage.py makemigrations && 
+  #            python manage.py migrate &&
+  #            python manage.py runserver 0.0.0.0:8000"
+  #   environment:
+  #     - DATABASE_URL=postgresql://postgres:password@psg:5432/admin_psg
+  #   labels:
+  #     - "traefik.enable=true"
+  #     - "traefik.http.routers.admin.rule=Host(`localhost`) && PathPrefix(`/admin_service`)"
+  #     - "traefik.http.middlewares.admin-stripprefix.stripprefix.prefixes=/admin_service"
+  #     - "traefik.http.routers.admin.middlewares=admin-stripprefix"
+  #     - "traefik.http.services.admin.loadbalancer.server.port=8000"
+  #     - "traefik.http.routers.admin.entrypoints=web"
+  #   depends_on:
+  #     - psg
+  #   networks:
+  #     - app-network
 
   chat:
     build:
@@ -181,7 +181,7 @@ services:
       - DATABASE_URL=postgresql+asyncpg://postgres:zxsa1234@psg:5432/chat_psg
     tty: true
     labels:
-      - "traefik.http.routers.chat_http.rule=Host(`chat_http.localhost`) && PathPrefix(`/messages`)"
+      - "traefik.http.routers.chat_http.rule=Host(`localhost`) && PathPrefix(`/messages`)"
       - "traefik.http.services.chat_http.loadbalancer.server.port=8000"
       - "traefik.http.routers.chat_http.entrypoints=web"
     depends_on:

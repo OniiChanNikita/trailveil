@@ -70,7 +70,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'review.wsgi.application'
-FORCE_SCRIPT_NAME = "/review_service" 
+FORCE_SCRIPT_NAME = "/api_review" 
 USE_X_FORWARDED_HOST = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 

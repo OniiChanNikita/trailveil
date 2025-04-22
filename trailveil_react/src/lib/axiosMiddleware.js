@@ -37,7 +37,7 @@ api.interceptors.response.use(
 
         // Делаем запрос на обновление токена
         const response = await axios.post(
-          `http://auth.localhost/auth_service/refresh/`,
+          `http://localhost/api_auth/refresh/`,
           {}, // Пустое тело, так как refresh token в cookies
           { 
             withCredentials: true,
@@ -59,7 +59,7 @@ api.interceptors.response.use(
         return api(originalRequest);
       } catch (refreshError) {
         // Если не удалось обновить - разлогиниваем
-        /*store.dispatch(logout());*/
+        store.dispatch(logout());
         return Promise.reject(refreshError);
       }
     }

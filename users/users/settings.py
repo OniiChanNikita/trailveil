@@ -73,7 +73,7 @@ TEMPLATES = [
 
 
 WSGI_APPLICATION = 'users.wsgi.application'
-FORCE_SCRIPT_NAME = "/users_service" 
+FORCE_SCRIPT_NAME = "/api_users" 
 USE_X_FORWARDED_HOST = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
@@ -100,7 +100,7 @@ from corsheaders.defaults import default_headers
 
 CORS_ALLOWED_ORIGINS = [
     "http://frontend.localhost:80",  # Gateway адрес
-    "http://frontend.localhost:3000",
+    "http://localhost:3000",
 ]
 
 #CORS_ALLOW_ALL_ORIGINS = True  # ❗ Убрать в продакшене!
@@ -114,7 +114,7 @@ CORS_ALLOW_HEADERS = list(default_headers) + [
 
 CSRF_TRUSTED_ORIGINS = [
     "http://frontend.localhost:80",  # Gateway адрес
-    "http://frontend.localhost:3000",
+    "http://localhost:3000",
 ]
 
 REST_FRAMEWORK = {

@@ -8,7 +8,7 @@ const UsersSidebar = ({ onUserSelect }) => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get('http://chat_http.localhost/messages/staff/');
+        const response = await axios.get('http://localhost/messages/staff/');
 
         for (const i of response.data){
           console.log(i)

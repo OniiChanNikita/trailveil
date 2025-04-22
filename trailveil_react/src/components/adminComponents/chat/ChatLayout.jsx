@@ -46,7 +46,7 @@ const ChatLayout = () => {
 
     const fetchConversations = async () => {
       try {
-        const response = await fetch('http://chat_http.localhost/messages/staff');
+        const response = await fetch('http://localhost/messages/staff');
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -66,7 +66,7 @@ const ChatLayout = () => {
 
     const fetchMessages = async () => {
       try {
-        const response = await fetch(`http://chat_http.localhost/messages/chat/${currentChat.id}`);
+        const response = await fetch(`http://localhost/messages/chat/${currentChat.id}`);
         const data = await response.json();
         console.log(data)
         setMessages(data);
