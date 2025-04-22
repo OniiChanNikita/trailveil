@@ -56,6 +56,7 @@ class LoginView(APIView):
                 httponly=True,
                 secure=False,  # Только для HTTPS
                 samesite='Lax',
+                domain='.localhost',
                 max_age=60 * 60 * 24 * 30,  # 30 дней
                 # path='/api/auth/refresh/'  # Доступно только для эндпоинта refresh
             )
@@ -132,6 +133,7 @@ class RegisterView(APIView):
                 httponly=True,
                 secure=False,  # установить True при использовании HTTPS
                 samesite='Lax',
+                domain='.localhost',
                 max_age=60 * 60 * 24 * 30,  # 30 дней
             )
             return response
