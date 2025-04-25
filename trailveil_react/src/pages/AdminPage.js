@@ -1,31 +1,41 @@
 import { useState, useEffect } from "react";
 import { Outlet, Link, useNavigate } from "react-router-dom";
 import { useTheme } from "../providers/ThemeProvider";
-import { checkUserRole } from "../services/authService";
-import api from "../lib/axiosMiddleware"
+import { checkUserAccess } from "../services/authService"; // заменили функцию
 
 const AdminPage = () => {
   const { theme, toggleTheme } = useTheme();
   const [activeTab, setActiveTab] = useState("dashboard");
+  const [userPermissions, setUserPermissions] = useState([]);
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
-  // Проверка роли при монтировании
+  // Таб с нужным permission
+  const tabs = [
+    { id: "dashboard", name: "Дашборд", icon: "📊", permission: null },
+    { id: "users", name: "Пользователи", icon: "👥", permission: "manage_users" },
+    { id: "products", name: "Товары", icon: "🛒", permission: "manage_products" },
+    { id: "orders", name: "Заказы", icon: "📦", permission: "manage_orders" },
+    { id: "chat", name: "Чат", icon: "💬", permission: "reply_messages" },
+  ];
+
   useEffect(() => {
     const verifyAccess = async () => {
       try {
-        const role = await checkUserRole();
-        const allowedRoles = ['admin', 'superadmin', 'moderator', 'support'];
-        
-        if (!role) {
+        const { role, permissions } = await checkUserAccess();
+        console.log(role, permissions)  
+        const allowedRoles = ["superadmin", "admin", "moderator", "support"];
+
+        if (!allowedRoles.includes(role.name)) {
           navigate("/");
           return;
         }
         
+        setUserPermissions(permissions.map(item => item.code));
         setIsAuthorized(true);
       } catch (error) {
-        console.error('Access verification failed:', error);
+        console.error("Access verification failed:", error);
         navigate("/");
       } finally {
         setIsLoading(false);
@@ -35,14 +45,9 @@ const AdminPage = () => {
     verifyAccess();
   }, [navigate]);
 
-  // Список вкладок
-  const tabs = [
-    { id: "dashboard", name: "Дашборд", icon: "📊" },
-    { id: "users", name: "Пользователи", icon: "👥" },
-    { id: "products", name: "Товары", icon: "🛒" },
-    { id: "orders", name: "Заказы", icon: "📦" },
-    { id: "chat", name: "Чат", icon: "💬" },
-  ];
+  const hasPermission = (permission) => {
+    return !permission || userPermissions.includes(permission);
+  };
 
   if (isLoading) {
     return (
@@ -53,7 +58,7 @@ const AdminPage = () => {
   }
 
   if (!isAuthorized) {
-    return null; // Редирект уже произошел
+    return null;
   }
 
   return (
@@ -61,9 +66,9 @@ const AdminPage = () => {
       {/* Боковая панель */}
       <aside className="w-64 p-4 border-r bg-white dark:bg-gray-800">
         <h1 className="text-xl font-bold mb-6">Админ-панель</h1>
-        
+
         <nav>
-          {tabs.map((tab) => (
+          {tabs.filter(tab => hasPermission(tab.permission)).map((tab) => (
             <Link
               key={tab.id}
               to={`/admin/${tab.id}`}
@@ -86,7 +91,7 @@ const AdminPage = () => {
 
       {/* Основной контент */}
       <main className="flex-1 p-6 overflow-auto">
-        <Outlet />
+        <Outlet context={{ userPermissions }} /> {/* пробрасываем дальше */}
       </main>
     </div>
   );

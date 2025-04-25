@@ -92,9 +92,15 @@ class StaffMeView(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request):
-        print(request.user)
-        user = User.objects.get(username=request.data.get("username"))
-        return Response(StaffMeSerializer(user, many=False).data)
+        print(request.user.username)
+        user = User.objects.get(username=request.user.username)
+        permissions = Permission.objects.filter(roles=user.role)
+
+        user_serializer = StaffMeSerializer(user, many=False).data
+        permissions_serializer = PermissionSerializer(permissions, many=True).data
+
+        user_serializer['permissions'] = permissions_serializer
+        return Response(user_serializer)
 
 class StaffUsersView(APIView):
     permission_classes = [AllowAny]
@@ -102,7 +108,9 @@ class StaffUsersView(APIView):
     def get(self, request):
         print(request.data)
         if request.data.get("userId")!=None:
-            user = User.objects.filter(username=request.data.get("userId"))
+            user = User.objects.get(id=request.data.get("userId"))
+
         else:
             user = User.objects.all()
+
         return Response(StaffUsersSerializer(user, many=True).data)

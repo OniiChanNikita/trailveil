@@ -1,23 +1,24 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetchProducts } from "../../lib/api";
 import { useState } from "react";
-import { usePermissions } from "../../hooks/usePermissions";
-import { Link } from "react-router-dom";
+import { Link, useOutletContext } from "react-router-dom";
 
 const Products = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const { isAdmin, isLoading } = usePermissions();
+  const { permissions } = useOutletContext(); // получаем permissions из контекста
   const { data: products, isLoading: productsLoading, error } = useQuery({
     queryKey: ["products"],
     queryFn: fetchProducts
   });
-  console.log(isAdmin)
+
+  console.log(products, permissions)
 
   const filteredProducts = products?.filter(product =>
     product.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  if (isLoading) return <div className="p-4">Проверка прав доступа...</div>;
+  const canEditProducts = permissions?.includes("manage_products"); // 🔑 ключевой пермишен
+
   if (productsLoading) return <div className="p-4">Загрузка товаров...</div>;
   if (error) return <div className="p-4 text-red-500">Ошибка: {error.message}</div>;
 
@@ -34,7 +35,7 @@ const Products = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
           
-          {isAdmin && (
+          {canEditProducts && (
             <Link 
               to="/admin/products/create"
               className="w-auto bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded transition-colors"
@@ -53,7 +54,7 @@ const Products = () => {
               <th className="p-3 text-left">Название</th>
               <th className="p-3 text-left">Цена</th>
               <th className="p-3 text-left">Доступность</th>
-              {isAdmin && <th className="p-3 text-left">Действия</th>}
+              {canEditProducts && <th className="p-3 text-left">Действия</th>}
             </tr>
           </thead>
           <tbody>
@@ -72,7 +73,7 @@ const Products = () => {
                       {product.availability ? 'В наличии' : 'Нет в наличии'}
                     </span>
                   </td>
-                  {isAdmin && (
+                  {canEditProducts && (
                     <td className="p-3 flex gap-2">
                       <Link 
                         to={`/admin/products/edit/${product.slug}`}
@@ -82,7 +83,7 @@ const Products = () => {
                       </Link>
                       <button 
                         className="w-auto bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm"
-                        /*onClick={() => handleDelete(product.slug)}*/
+                        // onClick={() => handleDelete(product.slug)}
                       >
                         Удалить
                       </button>
@@ -92,7 +93,7 @@ const Products = () => {
               ))
             ) : (
               <tr>
-                <td colSpan={isAdmin ? 5 : 4} className="p-4 text-center text-gray-500">
+                <td colSpan={canEditProducts ? 5 : 4} className="p-4 text-center text-gray-500">
                   Товары не найдены
                 </td>
               </tr>

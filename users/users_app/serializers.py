@@ -39,7 +39,7 @@ class StaffMeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'name', "role", "permissions"]
+        fields = ['id', 'username', "role", "permissions"]
 
 class StaffUsersSerializer(serializers.ModelSerializer):
     role = RoleSerializer(many=False, read_only=True)

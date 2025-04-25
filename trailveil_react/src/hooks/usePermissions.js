@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { checkUserRole } from '../services/authService';
+import { checkUserAccess } from '../services/authService';
 
 export const usePermissions = () => {
   const [role, setRole] = useState(null);
@@ -8,7 +8,7 @@ export const usePermissions = () => {
   useEffect(() => {
     const verifyRole = async () => {
       setIsLoading(true);
-      const currentRole = await checkUserRole();
+      const currentRole = await checkUserAccess();
       setRole(currentRole);
       setIsLoading(false);
     };

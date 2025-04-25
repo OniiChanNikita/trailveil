@@ -39,7 +39,7 @@ const App = () => {
         <Route path="/chat" element={<ProtectedRoute><ChatPage /></ProtectedRoute>} />
 
         {/* Админ-маршруты */}
-        <Route path="/admin/*" element={<ProtectedRoute><AdminPage /></ProtectedRoute>}>
+        <Route path="/admin/*" element={<AdminPage />}> {/*<ProtectedRoute></ProtectedRoute>*/}
           <Route index element={<Dashboard />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="users" element={<Users />} />

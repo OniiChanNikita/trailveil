@@ -1,16 +1,14 @@
-export const checkUserRole = async () => {
+import api from "../lib/axiosMiddleware"
+
+export const checkUserAccess = async () => {
   try {
-    const response = await fetch(`http://localhost/api_users/users/${localStorage.getItem("username")}`, {
-/*      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
-      }*/
-    });
+    const response = await api.get(`http://localhost/api_users/api/staff/me`);
+
     
-    if (!response.ok) throw new Error('Ошибка проверки роли');
+    if (response.status!=200) throw new Error('Ошибка проверки роли');
     
-    const data = await response.json();
-    console.log(data.role)
-    return data.role; // Предполагаем, что бэкенд возвращает { role: 'admin' | 'support' | ... }
+    const data = response.data;
+    return {role: data.role, permissions: data.permissions}; // Предполагаем, что бэкенд возвращает { role: 'admin' | 'support' | ... }
   } catch (error) {
     console.error('Failed to check role:', error);
     return null;
