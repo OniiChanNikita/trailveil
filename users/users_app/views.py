@@ -92,7 +92,6 @@ class StaffMeView(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request):
-        print(request.user.username)
         user = User.objects.get(username=request.user.username)
         permissions = Permission.objects.filter(roles=user.role)
 
