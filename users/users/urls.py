@@ -27,5 +27,5 @@ urlpatterns = [
     path('user/validate/', ValidateLoginView.as_view(), name='user-validate'),  # Получить пользователя по ID
 
     path('api/staff/me', StaffMeView.as_view(), name='staff-me'),
-    path('api/staff/users', StaffUsersView.as_view(), name='staff-users')
+    path('api/staff/users/', StaffUsersView.as_view(), name='staff-users')
 ]

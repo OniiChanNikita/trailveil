@@ -106,10 +106,20 @@ class StaffUsersView(APIView):
 
     def get(self, request):
         print(request.data)
-        if request.data.get("userId")!=None:
-            user = User.objects.get(id=request.data.get("userId"))
 
-        else:
-            user = User.objects.all()
+        user = User.objects.all()
 
         return Response(StaffUsersSerializer(user, many=True).data)
+
+    def patch(self, request):
+        print("PATCH request data:", request.data)
+        user = get_object_or_404(User, id=request.GET.get("userId"))
+        serializer = StaffUsersSerializer(user, data=request.data, partial=True)
+        
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+            
+        print("Serializer errors:", serializer.errors)
+        return Response(serializer.errors, status=400)
+      

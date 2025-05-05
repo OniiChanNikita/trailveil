@@ -18,7 +18,14 @@ class ProductsView(APIView):
 		return Response(ProductSerializer(Product.objects.all(), many=True).data)
 
 	def post(self, request):
-		return Response(ProductSerializer(Product.objects.filter(title=request.data['title'], availability=request.data["availability"], category__contains=request.data["category"]), many=True).data)
+		return Response(ProductSerializer(Product.objects.filter(title=request.data['search'], availability=request.data["availability"], category__contains=request.data["category"]), many=True).data)
+
+class ProductCreate(APIView):
+	permission_classes = [AllowAny]
+
+	def post(self, request):
+		return Response()
+
 
 class ProductView(APIView):	
 	permission_classes = [AllowAny]

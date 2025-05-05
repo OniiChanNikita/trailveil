@@ -41,12 +41,15 @@ class StaffMeSerializer(serializers.ModelSerializer):
         model = User
         fields = ['id', 'username', "role", "permissions"]
 
+
 class StaffUsersSerializer(serializers.ModelSerializer):
-    role = RoleSerializer(many=False, read_only=True)
+    role = serializers.PrimaryKeyRelatedField(
+        queryset=Role.objects.all(),
+        write_only=True
+    )
+    role_info = RoleSerializer(source='role', read_only=True)
 
     class Meta:
         model = User
-        fields = ['id', 'email', "role", "is_active"]
-        
-
-
+        fields = ['id', 'email', 'username', 'is_active', 'role', 'role_info' 'is_staff']
+        read_only_fields = ['id']

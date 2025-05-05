@@ -17,7 +17,9 @@ import ChatPage from './pages/ChatPage';
 import Dashboard from "./components/adminComponents/Dashboard";
 import Users from "./components/adminComponents/Users";
 import Products from "./components/adminComponents/Products";
+import EditProduct from "./components/adminComponents/EditProduct";
 import ChatLayout from "./components/adminComponents/chat/ChatLayout";
+import CreateProduct from "./components/adminComponents/CreateProduct";
 
 import ProtectedRoute from './routes/ProtectedRoute'
 
@@ -44,6 +46,8 @@ const App = () => {
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="users" element={<Users />} />
           <Route path="products" element={<Products />} />
+          <Route path="products/create" element={<CreateProduct />} />
+          <Route path="products/edit/:slug" element={<EditProduct />} />
           <Route path="chat" element={<ChatLayout />} />
         </Route>
 

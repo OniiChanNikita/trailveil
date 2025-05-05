@@ -2,20 +2,34 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchUsers, updateUser } from "../../lib/api";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { Link, useOutletContext } from "react-router-dom";
+
 
 const Users = () => {
   const queryClient = useQueryClient();
   const [selectedUser, setSelectedUser] = useState(null);
   const { register, handleSubmit, reset } = useForm();
+  const { userPermissions } = useOutletContext()
+
+  const roleMap = {
+    superadmin: 1,
+    admin: 2,
+    moderator: 3,
+    support: 4
+  };
 
   // Загрузка пользователей
   const { data: users } = useQuery({
     queryKey: ["users"],
     queryFn: fetchUsers
   });
+  console.log(users)
+
+  const canEditUsers = userPermissions?.includes("manage_users")
+  const canEditAdmin = userPermissions?.includes("manage_admins")
 
   const { mutate } = useMutation({
-    mutationFn: (data) => updateUser(data.userId, data),
+    mutationFn: (data) => updateUser(data.userId, data.data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['users'] });
       setSelectedUser(null);
@@ -26,7 +40,8 @@ const Users = () => {
   });
 
   const onSubmit = (data) => {
-    mutate({ userId: selectedUser.id, data });
+    const roleId = roleMap[data.role];
+    mutate({ userId: selectedUser.id, data: { role: roleId } });
   };
 
 
@@ -49,15 +64,19 @@ const Users = () => {
             <tr key={user.id} className="border-t">
               <td className="p-3">{user.id}</td>
               <td>{user.email}</td>
-              <td>{user.role?.name}</td>
-              <td>
-                <button 
-                  onClick={() => setSelectedUser(user)}
-                  className="w-auto bg-blue-500 text-white px-3 py-1 rounded mr-2"
-                >
-                  Редактировать
-                </button>
-              </td>
+              <td>{user.role_info?.name}</td>
+              
+              {(canEditAdmin || (canEditUsers && user.role_info?.name != "superadmin")) &&
+                <td>
+                  <button 
+                    onClick={() => setSelectedUser(user)}
+                    className="w-auto bg-blue-500 text-white px-3 py-1 rounded mr-2"
+                  >
+                    Редактировать
+                  </button>
+                </td> 
+              }
+
             </tr>
           ))}
         </tbody>
@@ -73,7 +92,7 @@ const Users = () => {
                 Роль:
                 <select
                   {...register("role")}
-                  defaultValue={selectedUser.role.name}
+                  defaultValue={selectedUser.role_info.name}
                   className="w-full p-2 border rounded"
                 >
                   <option value="admin">Admin</option>

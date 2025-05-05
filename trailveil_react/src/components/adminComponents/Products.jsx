@@ -5,19 +5,18 @@ import { Link, useOutletContext } from "react-router-dom";
 
 const Products = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const { permissions } = useOutletContext(); // получаем permissions из контекста
+  const { userPermissions } = useOutletContext();
   const { data: products, isLoading: productsLoading, error } = useQuery({
     queryKey: ["products"],
     queryFn: fetchProducts
   });
-
-  console.log(products, permissions)
+  console.log(products)
 
   const filteredProducts = products?.filter(product =>
     product.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const canEditProducts = permissions?.includes("manage_products"); // 🔑 ключевой пермишен
+  const canEditProducts = userPermissions?.includes("manage_products");
 
   if (productsLoading) return <div className="p-4">Загрузка товаров...</div>;
   if (error) return <div className="p-4 text-red-500">Ошибка: {error.message}</div>;
@@ -32,6 +31,7 @@ const Products = () => {
             type="text"
             placeholder="Поиск товаров..."
             className="p-2 border rounded w-64"
+            value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
           
@@ -47,24 +47,24 @@ const Products = () => {
       </div>
 
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
-        <table className="w-full">
+        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
           <thead className="bg-gray-100 dark:bg-gray-700">
             <tr>
-              <th className="p-3 text-left">ID</th>
-              <th className="p-3 text-left">Название</th>
-              <th className="p-3 text-left">Цена</th>
-              <th className="p-3 text-left">Доступность</th>
-              {canEditProducts && <th className="p-3 text-left">Действия</th>}
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">ID</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Название</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Цена</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Доступность</th>
+              {canEditProducts && <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Действия</th>}
             </tr>
           </thead>
-          <tbody>
+          <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
             {filteredProducts?.length > 0 ? (
               filteredProducts.map(product => (
-                <tr key={product.slug} className="border-t hover:bg-gray-50 dark:hover:bg-gray-700">
-                  <td className="p-3">{product.slug}</td>
-                  <td className="p-3">{product.title}</td>
-                  <td className="p-3">${product.price?.toFixed(2)}</td>
-                  <td className="p-3">
+                <tr key={product.slug} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+                  <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">{product.slug}</td>
+                  <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">{product.title}</td>
+                  <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">${product.price?.toFixed(2)}</td>
+                  <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
                     <span className={`px-2 py-1 rounded-full text-xs ${
                       product.availability 
                         ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' 
@@ -74,27 +74,29 @@ const Products = () => {
                     </span>
                   </td>
                   {canEditProducts && (
-                    <td className="p-3 flex gap-2">
-                      <Link 
-                        to={`/admin/products/edit/${product.slug}`}
-                        className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm"
-                      >
-                        Редактировать
-                      </Link>
-                      <button 
-                        className="w-auto bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm"
-                        // onClick={() => handleDelete(product.slug)}
-                      >
-                        Удалить
-                      </button>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
+                      <div className="flex gap-2">
+                        <Link 
+                          to={`/admin/products/edit/${product.slug}`}
+                          className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm transition-colors"
+                        >
+                          Редактировать
+                        </Link>
+                        <button 
+                          className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm transition-colors"
+                          // onClick={() => handleDelete(product.slug)}
+                        >
+                          Удалить
+                        </button>
+                      </div>
                     </td>
                   )}
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan={canEditProducts ? 5 : 4} className="p-4 text-center text-gray-500">
-                  Товары не найдены
+                <td colSpan={canEditProducts ? 5 : 4} className="px-4 py-4 text-center text-sm text-gray-500 dark:text-gray-400">
+                  {searchTerm ? "Товары по вашему запросу не найдены" : "Нет доступных товаров"}
                 </td>
               </tr>
             )}
