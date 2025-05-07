@@ -27,13 +27,13 @@ const ProductCard = ({ product }) => {
       <div className="relative aspect-square overflow-hidden">
         <img
           src={product.image}
-          alt={product.name}
+          alt={product.title}
           className={`w-full h-full object-cover transition-transform duration-500 ${isHovered ? 'scale-105' : 'scale-100'}`}
         />
         
         {/* Product Tags */}
         <div className="absolute top-3 left-3 flex gap-2">
-          {product.tags?.includes('new') && (
+          {product.category?.includes('new') && (
             <span className={`px-2 py-1 text-xs font-medium rounded-md ${getTagColor('new')}`}>
               NEW
             </span>
@@ -51,7 +51,7 @@ const ProductCard = ({ product }) => {
         </div>
         
         {/* Out of Stock Badge */}
-        {!product.inStock && (
+        {!product.availability && (
           <span className="absolute top-3 right-3 bg-red-900/80 text-white px-2 py-1 rounded-md text-xs font-medium">
             SOLD OUT
           </span>
@@ -74,8 +74,8 @@ const ProductCard = ({ product }) => {
       {/* Product Info */}
       <div className="p-4">
         <div className="flex justify-between items-start mb-2">
-          <h3 className="text-lg font-semibold text-white line-clamp-1">{product.name}</h3>
-          {product.inStock && (
+          <h3 className="text-lg font-semibold text-white line-clamp-1">{product.title}</h3>
+          {product.availability && (
             <span className="flex items-center text-xs text-green-400 bg-green-900/30 px-2 py-1 rounded-md">
               <div className="w-2 h-2 bg-green-400 rounded-full mr-1"></div>
               IN STOCK
@@ -102,14 +102,14 @@ const ProductCard = ({ product }) => {
           
           <button 
             className={`w-auto bg-transparent flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-              product.inStock
+              product.availability
                 ? 'bg-gray-800 hover:bg-gray-700 text-white'
                 : 'bg-gray-900 text-gray-500 cursor-not-allowed'
             }`}
-            disabled={!product.inStock}
+            disabled={!product.availability}
           >
             <FiShoppingBag className="h-4 w-4" />
-            {product.inStock ? 'Add to pack' : 'Out of stock'}
+            {product.availability ? 'Add to pack' : 'Out of stock'}
           </button>
         </div>
       </div>

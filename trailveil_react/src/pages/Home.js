@@ -15,7 +15,8 @@ import { useSelector } from "react-redux";
 const Home = () => {
   const username = useSelector((state) => state.auth.user);
   const token = useSelector((state) => state.auth.token);
-  console.log(username, token)
+  console.log(username)
+  console.log(JSON.stringify(token));
 
   return (
 

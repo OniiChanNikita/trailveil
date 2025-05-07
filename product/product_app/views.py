@@ -15,16 +15,22 @@ class ProductsView(APIView):
 	permission_classes = [AllowAny]
 
 	def get(self, request):
-		return Response(ProductSerializer(Product.objects.all(), many=True).data)
+		return Response(ProductSerializer(Product.objects.filter(is_deleted=False), many=True).data)
 
 	def post(self, request):
-		return Response(ProductSerializer(Product.objects.filter(title=request.data['search'], availability=request.data["availability"], category__contains=request.data["category"]), many=True).data)
+		return Response(ProductSerializer(Product.objects.filter(is_deleted=False, title=request.data['search'], availability=request.data["availability"], category__contains=request.data["category"]), many=True).data)
 
-class ProductCreate(APIView):
+
+class ProductsCreate(APIView):
 	permission_classes = [AllowAny]
 
 	def post(self, request):
-		return Response()
+		serializer = ProductSerializer(data=request.data, many=False)
+		if serializer.is_valid():
+			serializer.save()
+			return Response(serializer.data)
+		return Response(serializer.errors, status = 400)
+
 
 
 class ProductView(APIView):	
@@ -33,6 +39,23 @@ class ProductView(APIView):
 	def get(self, request, slug):
 		product = get_object_or_404(Product, slug=slug)
 		return Response(ProductSerializer(product, many=False).data)
+
+	def put(self, request, slug):
+		product = get_object_or_404(Product, slug=slug)
+		serializer = ProductSerializer(product, data=request.data, many=False)
+		if serializer.is_valid():
+			serializer.save()
+			return Response(serializer.data)
+
+		return Response(serializer.errors, status = 400)
+
+	def delete(self, request, slug):
+		product = get_object_or_404(Product, slug=slug)
+		product.is_deleted = True
+		product.save()
+		return Response(status=204)
+
+
 
 class CategoryView(APIView):
 	permission_classes = [AllowAny]

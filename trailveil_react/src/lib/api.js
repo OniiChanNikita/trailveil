@@ -30,11 +30,29 @@ export const fetchProduct = async (product) => {
   return response.json();
 };
 
-export const createProduct = async (product, data) => {
-  const res = await fetch(`http://localhost/api_product/api/staff/users/?userId=${product}`, {
-    method: "PATCH",
+export const updateProduct = async (product, data) => {
+  const res = await fetch(`http://localhost/api_product/products/${product}`, {
+    method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
   });
   return res.json();
 };
+
+export const deleteProduct = async (product) => {
+  const res = await fetch(`http://localhost/api_product/products/${product}`, {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" },
+  });
+  return 500
+}
+
+export const createProduct = async (data) => {
+  const res = await fetch(`http://localhost/api_product/products/create`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  return res.json()
+}
+

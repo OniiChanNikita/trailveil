@@ -47,12 +47,10 @@ api.interceptors.response.use(
 
 
         const { access } = response.data;
+        console.log(access)
         
         // Сохраняем новый access token в хранилище
-        store.dispatch(setToken({ 
-          token: access,
-          // refresh token остаётся в HTTP-only cookie
-        }));
+        store.dispatch(setToken(response.data.access));
         
         // Повторяем оригинальный запрос с новым токеном
         originalRequest.headers.Authorization = `Bearer ${access}`;

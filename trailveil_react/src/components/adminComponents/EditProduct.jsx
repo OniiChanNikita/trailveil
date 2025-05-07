@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link  } from 'react-router-dom';
-import { fetchProduct } from "../../lib/api";
-import { useQuery } from "@tanstack/react-query";
+import { fetchProduct, updateProduct } from "../../lib/api";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from 'axios';
 import { useOutletContext } from 'react-router-dom';
 
 
 const EditProduct = () => {
+    const queryClient = useQueryClient();
     const { slug } = useParams();
     const navigate = useNavigate();
     const { userPermissions } = useOutletContext();
@@ -27,6 +28,17 @@ const EditProduct = () => {
         queryKey: ["product"],
         queryFn: () => fetchProduct(slug)
     });
+
+    const { mutate } = useMutation({
+        mutationFn: (data) => updateProduct(slug, data.data),
+        onSuccess: () => {
+          /*queryClient.invalidateQueries({ queryKey: ['productData'] });*/
+          navigate('/admin/products')
+        },
+        onError: (error) => {
+          console.error('Ошибка при обновлении:', error);
+        }
+      });
     
     useEffect(() => {
       if (productData) {
@@ -35,22 +47,6 @@ const EditProduct = () => {
     }, [productData]);
         
     
-    
-    
-    
-/*    useEffect(() => {
-        const fetchProduct = async () => {
-            try {
-                const response = await axios.get(`/api/products/${slug}/`);
-                setProduct(response.data);
-                setIsLoading(false);
-            } catch (error) {
-                console.error('Error fetching product:', error);
-                navigate('/admin/products');
-            }
-        };
-        fetchProduct();
-    }, [slug, navigate]);*/
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -101,12 +97,15 @@ const EditProduct = () => {
             return;
         }
 
-        try {
+        console.log(slug, product)
+        mutate({ product: slug, data: product });
+
+       /* try {
             await axios.put(`/api/products/${slug}/`, product);
             navigate('/admin/products');
         } catch (error) {
             console.error('Error saving product:', error);
-        }
+        }*/
     };
 
     if (productsLoading) return <div className="p-4">Загрузка товаров...</div>;
@@ -263,7 +262,7 @@ const EditProduct = () => {
                             <button
                                 type="button"
                                 onClick={handleSizeAdd}
-                                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                                className="w-auto inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                             >
                                 Добавить
                             </button>
@@ -338,7 +337,7 @@ const EditProduct = () => {
                         <button
                             type="submit"
                             disabled={productsLoading}
-                            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="w-auto inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             {productsLoading ? (
                                 <>

@@ -1,22 +1,36 @@
-import { useQuery } from "@tanstack/react-query";
-import { fetchProducts } from "../../lib/api";
+import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
+import { fetchProducts, deleteProduct } from "../../lib/api";
 import { useState } from "react";
 import { Link, useOutletContext } from "react-router-dom";
 
 const Products = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const { userPermissions } = useOutletContext();
+  const queryClient = useQueryClient();
   const { data: products, isLoading: productsLoading, error } = useQuery({
     queryKey: ["products"],
     queryFn: fetchProducts
   });
-  console.log(products)
+
+  const deleteMutation = useMutation({
+    mutationFn: deleteProduct,
+    onSuccess: (_, slug) => {
+      // Обновляем кэш — убираем удалённый продукт
+      queryClient.setQueryData(["products"], (oldData) =>
+        oldData?.filter((product) => product.slug !== slug)
+      );
+    },
+  });
 
   const filteredProducts = products?.filter(product =>
     product.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const canEditProducts = userPermissions?.includes("manage_products");
+
+  const handleDelete = (slug) => {
+    deleteMutation.mutate(slug);
+  }
 
   if (productsLoading) return <div className="p-4">Загрузка товаров...</div>;
   if (error) return <div className="p-4 text-red-500">Ошибка: {error.message}</div>;
@@ -38,7 +52,7 @@ const Products = () => {
           {canEditProducts && (
             <Link 
               to="/admin/products/create"
-              className="w-auto bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded transition-colors"
+              className="w-auto h-auto bg-green-500 hover:bg-green-600 text-white px-4 py-4 rounded transition-colors"
             >
               + Создать товар
             </Link>
@@ -83,8 +97,8 @@ const Products = () => {
                           Редактировать
                         </Link>
                         <button 
-                          className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm transition-colors"
-                          // onClick={() => handleDelete(product.slug)}
+                          className="w-auto bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm transition-colors"
+                          onClick={() => handleDelete(product.slug)}
                         >
                           Удалить
                         </button>
