@@ -26,7 +26,7 @@ const ProductCard = ({ product }) => {
       {/* Product Image */}
       <div className="relative aspect-square overflow-hidden">
         <img
-          src={product.image}
+          src={product.image?.replace('minio:9000', 'localhost:9000')}
           alt={product.title}
           className={`w-full h-full object-cover transition-transform duration-500 ${isHovered ? 'scale-105' : 'scale-100'}`}
         />

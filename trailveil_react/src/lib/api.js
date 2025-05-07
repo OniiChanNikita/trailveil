@@ -50,9 +50,12 @@ export const deleteProduct = async (product) => {
 export const createProduct = async (data) => {
   const res = await fetch(`http://localhost/api_product/products/create`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
+    body: data,
   });
-  return res.json()
+  if (!res.ok) {
+    throw new Error('Error creating product');
+  }
+  
+  return res.json();
 }
 

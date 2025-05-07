@@ -1,16 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate, Link  } from 'react-router-dom';
-import { fetchProduct, createProduct } from "../../lib/api";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from 'axios';
+import React, { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { createProduct } from "../../lib/api";
 import { useOutletContext } from 'react-router-dom';
 
-
-const EditProduct = () => {
-    const queryClient = useQueryClient();
-    const { slug } = useParams();
-    const navigate = useNavigate();
+const CreateProduct = () => {
     const { userPermissions } = useOutletContext();
+    const navigate = useNavigate();
+
     const [product, setProduct] = useState({
         title: '',
         size: [],
@@ -18,13 +14,13 @@ const EditProduct = () => {
         availability: false,
         rating: 0,
         price: 100,
-        category: []
+        category: [],
+        image: '' // This will hold the URL or path of the uploaded image
     });
 
     const [newSize, setNewSize] = useState('');
     const [newCategory, setNewCategory] = useState('');
-        
-    
+    const [imageFile, setImageFile] = useState(null); // This will hold the file selected by the user
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -68,6 +64,17 @@ const EditProduct = () => {
         }));
     };
 
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setImageFile(file);
+            setProduct(prev => ({
+                ...prev,
+                image: URL.createObjectURL(file) // Temporary URL for preview
+            }));
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!userPermissions?.includes("manage_products")) {
@@ -75,17 +82,26 @@ const EditProduct = () => {
             return;
         }
 
-        console.log(slug, product)
+        const formData = new FormData();
+        formData.append('title', product.title);
+        formData.append('size', JSON.stringify(product.size));
+        formData.append('description', product.description);
+        formData.append('availability', product.availability);
+        formData.append('rating', product.rating);
+        formData.append('price', product.price);
+        formData.append('category', JSON.stringify(product.category));
+
+        if (imageFile) formData.append('image', imageFile);
+
 
         try {
-            createProduct(product)
+            console.log(formData)
+            await createProduct(formData); // Assuming createProduct handles FormData
             navigate('/admin/products');
         } catch (error) {
             console.error('Error saving product:', error);
         }
     };
-
-    
 
     return (
         <div className="max-w-4xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
@@ -101,19 +117,6 @@ const EditProduct = () => {
 
             <div className="bg-white dark:bg-gray-800 shadow rounded-lg overflow-hidden">
                 <form onSubmit={handleSubmit} className="p-6 space-y-8">
-                      {/*  <div className="bg-red-50 border-l-4 border-red-500 p-4">
-                            <div className="flex">
-                                <div className="flex-shrink-0">
-                                    <svg className="h-5 w-5 text-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                                    </svg>
-                                </div>
-                                <div className="ml-3">
-                                    <p className="text-sm text-red-700"></p>
-                                </div>
-                            </div>
-                        </div>*/}
-
                     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                         {/* Название */}
                         <div className="col-span-2">
@@ -175,32 +178,17 @@ const EditProduct = () => {
                             <label htmlFor="rating" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                 Рейтинг
                             </label>
-                            <div className="flex items-center">
-                                <input
-                                    type="number"
-                                    id="rating"
-                                    name="rating"
-                                    min="0"
-                                    max="5"
-                                    step="0.1"
-                                    value={product.rating}
-                                    onChange={handleChange}
-                                    className="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                                />
-                                <div className="ml-2 flex">
-                                    {[...Array(5)].map((_, i) => (
-                                        <svg
-                                            key={i}
-                                            className={`h-5 w-5 ${i < Math.floor(product.rating) ? 'text-yellow-400' : 'text-gray-300'}`}
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 20 20"
-                                            fill="currentColor"
-                                        >
-                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                        </svg>
-                                    ))}
-                                </div>
-                            </div>
+                            <input
+                                type="number"
+                                id="rating"
+                                name="rating"
+                                min="0"
+                                max="5"
+                                step="0.1"
+                                value={product.rating}
+                                onChange={handleChange}
+                                className="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                            />
                         </div>
 
                         {/* Доступность */}
@@ -249,10 +237,7 @@ const EditProduct = () => {
                                         onClick={() => handleSizeRemove(size)}
                                         className="w-auto bg-transparent ml-1.5 inline-flex text-gray-400 dark:text-gray-300 hover:text-gray-500 dark:hover:text-gray-100 focus:outline-none"
                                     >
-                                        <span className="sr-only">Удалить</span>
-                                        <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
-                                        </svg>
+                                        <span className="sr-only">Remove</span>❌
                                     </button>
                                 </span>
                             ))}
@@ -281,60 +266,45 @@ const EditProduct = () => {
                             </button>
                         </div>
                         <div className="flex flex-wrap gap-2">
-                            {product.category.map((cat) => (
-                                <span key={cat} className="inline-flex items-center px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 text-sm">
-                                    {cat}
+                            {product.category.map((category) => (
+                                <span key={category} className="w-auto inline-flex items-center px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 text-sm">
+                                    {category}
                                     <button
                                         type="button"
-                                        onClick={() => handleCategoryRemove(cat)}
+                                        onClick={() => handleCategoryRemove(category)}
                                         className="w-auto bg-transparent ml-1.5 inline-flex text-gray-400 dark:text-gray-300 hover:text-gray-500 dark:hover:text-gray-100 focus:outline-none"
                                     >
-                                        <span className="sr-only">Удалить</span>
-                                        <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
-                                        </svg>
+                                        <span className="sr-only">Remove</span>❌
                                     </button>
                                 </span>
                             ))}
                         </div>
                     </div>
 
-                    <div className="flex justify-end space-x-3 pt-6 border-t border-gray-200 dark:border-gray-700">
-                        <button
-                            type="button"
-                            onClick={() => navigate('/admin/products')}
-                            className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                        >
-                            Отмена
-                        </button>
+                    {/* Изображение */}
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                            Изображение товара
+                        </label>
+                        <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleImageChange}
+                            className="block w-full text-sm text-gray-500 dark:text-gray-200 file:py-2 file:px-4 file:border file:rounded-md file:bg-blue-100 file:text-blue-700"
+                        />
+                        {product.image && (
+                            <div className="mt-4">
+                                <img src={product.image} alt="Product preview" className="max-w-full h-auto"/>
+                            </div>
+                        )}
+                    </div>
+
+                    <div className="mt-8 flex justify-end">
                         <button
                             type="submit"
-                            className="w-auto inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                         >
-                                <>
-                                    <svg
-                                        className="animate-spin -ml-1 mr-2 h-5 w-5 text-white"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <circle
-                                            className="opacity-25"
-                                            cx="12"
-                                            cy="12"
-                                            r="10"
-                                            stroke="currentColor"
-                                            strokeWidth="4"
-                                        ></circle>
-                                        <path
-                                            className="opacity-75"
-                                            fill="currentColor"
-                                            d="M4 12a8 8 0 018-8v8H4z"
-                                        ></path>
-                                    </svg>
-                                    Сохранение...
-                                </>
-                                {/*'Сохранить'*/}
+                            Сохранить товар
                         </button>
                     </div>
                 </form>
@@ -342,4 +312,5 @@ const EditProduct = () => {
         </div>
     );
 };
-export default EditProduct;
+
+export default CreateProduct;

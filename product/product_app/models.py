@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from django.urls import reverse
 import random
+from storages.backends.s3boto3 import S3Boto3Storage
 
 def generate_random_digits():
     return ''.join([str(random.randint(0, 9)) for _ in range(5)])
@@ -26,6 +27,7 @@ class Product(models.Model):
 		default=list
 	)
 	description = models.TextField()
+	image = models.ImageField(upload_to="products/", storage=S3Boto3Storage())
 	availability = models.BooleanField(default=False)
 	rating = models.FloatField(default=0)
 	category = ArrayField(
